@@ -5,7 +5,6 @@ import './LandingPage.css';
 function LoginPage() {
     const [formData, setFormData] = useState({
         username: '',
-        email: '',
         password: '',
     });
     const [errors, setErrors] = useState({});
@@ -18,8 +17,7 @@ function LoginPage() {
 
     const validateForm = () => {
         let formErrors = {};
-        if (!formData.username) formErrors.username = "Username is required.";
-        if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) formErrors.email = "A valid email is required.";
+        if (!formData.username) formErrors.username = "User ID is required.";
         if (!formData.password) formErrors.password = "Password is required.";
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
@@ -41,7 +39,7 @@ function LoginPage() {
                 const response = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: formData.email, password: formData.password }),
+                    body: JSON.stringify({username: formData.username, password: formData.password }),
                 });
                 const data = await response.json();
     
@@ -66,7 +64,7 @@ function LoginPage() {
             <div className="card signup-card p-4 shadow-lg">
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">User ID</label>
                         <input
                             type="text"
                             className={`form-control ${errors.username ? 'is-invalid' : ''}`}
@@ -76,19 +74,6 @@ function LoginPage() {
                             required
                         />
                         <div className="invalid-feedback">{errors.username}</div>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                            id="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                        <div className="invalid-feedback">{errors.email}</div>
                     </div>
 
                     <div className="form-group">
@@ -106,10 +91,10 @@ function LoginPage() {
                     <button type="submit" className="btn btn-primary btn-block mt-4">Log In</button>
 
                     {submissionStatus === 'success' && (
-                        <div className="alert alert-success mt-3 text-center">Registration successful!</div>
+                        <div className="alert alert-success mt-3 text-center">Signin successful!</div>
                     )}
                     {submissionStatus === 'error' && (
-                        <div className="alert alert-danger mt-3 text-center">Please correct the errors in the form.</div>
+                        <div className="alert alert-danger mt-3 text-center">Invalid username and/or password.</div>
                     )}
                 </form>
             </div>

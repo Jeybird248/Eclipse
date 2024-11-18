@@ -1,6 +1,6 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
 // Create the Express app
 const app = express();
@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-const authRoutes = require('./routes/auth');
+import authRoutes from './routes/auth.js'; // Use the correct path and extension for your import
 app.use('/api/auth', authRoutes);
 
 // Default Route
@@ -21,3 +21,4 @@ app.get('/', (req, res) => {
 // Start Server
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
