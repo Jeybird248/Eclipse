@@ -25,10 +25,37 @@ function LoginPage() {
         return Object.keys(formErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (validateForm()) {
+    //         setSubmissionStatus('success');
+    //     } else {
+    //         setSubmissionStatus('error');
+    //     }
+    // };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            setSubmissionStatus('success');
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: formData.email, password: formData.password }),
+                });
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setSubmissionStatus('success');
+                    console.log(data.message);
+                } else {
+                    setSubmissionStatus('error');
+                    console.error(data.message);
+                }
+            } catch (error) {
+                console.error('Error connecting to the server:', error);
+                setSubmissionStatus('error');
+            }
         } else {
             setSubmissionStatus('error');
         }
