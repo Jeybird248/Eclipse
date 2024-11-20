@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { getAllFood,getFoodbyName} from "../services/database";
 import {Food} from '../models/food'
-
+import { getPool } from '../services/connection';
 
 const router = Router();
 

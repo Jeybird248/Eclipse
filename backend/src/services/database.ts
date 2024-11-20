@@ -1,12 +1,13 @@
 import {Food} from "../models/food";
 import {dietDairy} from "../models/dietDairy";
 import {dietDairyData,FoodData} from "../../../data/mockData";
-import pool from './connection';
+import { getPool } from './connection';
 
 const pd: Food[] = FoodData
 const psd: dietDairy[] = dietDairyData
 
 export async function getAllFood(): Promise<Food[]> {
+  const pool = await getPool();
   try {
     const [rows] = await pool.query('SELECT * from Food;'); // Replace "Food" with your actual table name
     // console.log('Fetched all food:', rows);
@@ -31,16 +32,18 @@ export async function getFoodbyName(foodName: string): Promise<Food[]> {
 }
 
 export async function getAllDietDiary(): Promise<dietDairy[]> {
+  const pool = await getPool();
     // return new Promise((resolve) => {
     //   setTimeout(() => {
     //     resolve(psd);
     //   }, 300);
     // });
-    const [rows] = await pool.query('SELECT * FROM UserDiet;');
-    // console.log("work");
-    return rows as dietDairy[];  
+  const [rows] = await pool.query('SELECT * FROM UserDiet;');
+  // console.log("work");
+  return rows as dietDairy[];  
 }
   export async function getDietDairyByDate(date_eaten: string): Promise<dietDairy[]> {
+    const pool = await getPool();
     console.log(date_eaten)
     const sqlQuery = `SELECT * FROM UserDiet WHERE date_eaten =${date_eaten};`;
     const [rows] = await pool.query(sqlQuery);
