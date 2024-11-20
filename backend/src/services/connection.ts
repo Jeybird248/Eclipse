@@ -6,7 +6,10 @@ dotenv.config();
 
 const connector = new Connector();
 let pool: Pool | null = null;
-async function initializePool() {
+
+export async function getPool(): Promise<Pool> {
+    if (pool) return pool;
+
     try {
         const clientOpts = await connector.getOptions({
             instanceConnectionName: 'ecplise:us-central1:db-fa24',
@@ -22,27 +25,23 @@ async function initializePool() {
 
         console.log('MySQL pool initialized successfully.');
 
-        await testConnection();
+        await testConnection(pool);
+        return pool;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error initializing MySQL pool:', error.message);
         } else {
             console.error('Unknown error occurred:', error);
         }
+        throw new Error('Failed to initialize MySQL pool.');
     }
 }
 
-async function testConnection() {
-    if (!pool) {
-        console.error('Pool is not initialized yet.');
-        return;
-    }
-
+async function testConnection(pool: Pool) {
     try {
         const connection = await pool.getConnection();
         console.log('Connected to MySQL database.');
 
-        // Test query
         const [rows] = await connection.query('SELECT 1 + 1 AS result;');
         console.log('Test query result:', rows);
 
@@ -53,12 +52,10 @@ async function testConnection() {
         } else {
             console.error('Unknown error:', error);
         }
+        throw new Error('Test connection to MySQL database failed.');
     }
 }
 
-initializePool();
-
-export default pool!;
 
 
 
