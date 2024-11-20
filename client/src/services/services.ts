@@ -47,11 +47,11 @@ export const searchFoodData = (query: string): Promise<Food[]> => {
     try {
       // Add quotes around the date
       const formattedQuery = `"${query}"`; // Add quotes around the query
-      const response = await httpClient.get(`/dietDairy/${encodeURIComponent(formattedQuery)}`);
+      const response = await httpClient.get('/dietDairy/${encodeURIComponent(formattedQuery)}');
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
-        console.warn(`No data found for date: ${query}`);
+        console.warn('No data found for date: ${query}');
         return []; // Return an empty array for 404
       }
       console.error(`Error fetching diet dairy data for ${query}:`, error);
