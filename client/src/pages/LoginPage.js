@@ -30,7 +30,9 @@ function LoginPage() {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await fetch('http://localhost:3007/api/auth/login', {
+                const apiBaseURL = process.env.REACT_APP_API_BASE_URL || '';
+                const endpoint = `${apiBaseURL}/auth/login`;
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({username: formData.username, password: formData.password }),
@@ -57,6 +59,8 @@ function LoginPage() {
     return (
         <div className="signup-container d-flex justify-content-center align-items-center">
             <div className="card signup-card p-4 shadow-lg">
+                <h2 className="text-center mb-4">Log In to Your Account</h2>
+                <p className="text-center mb-4">Please enter your username and password to access your account.</p>
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="form-group">
                         <label htmlFor="username">User ID</label>
@@ -83,13 +87,11 @@ function LoginPage() {
                         />
                         <div className="invalid-feedback">{errors.password}</div>
                     </div>
+
                     <button type="submit" className="btn btn-primary btn-block mt-4">Log In</button>
 
-                    {submissionStatus === 'success' && (
-                        <div className="alert alert-success mt-3 text-center">Signin successful!</div>
-                    )}
                     {submissionStatus === 'error' && (
-                        <div className="alert alert-danger mt-3 text-center">Invalid username and/or password.</div>
+                        <div className="alert alert-danger mt-3 text-center">Please check your credentials.</div>
                     )}
                 </form>
             </div>

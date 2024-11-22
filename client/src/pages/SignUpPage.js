@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './SignUpPage.css'; // Custom CSS file for additional styling
+import './SignUpPage.css'; 
+import { useNavigate } from 'react-router-dom';
 
 function SignUpPage() {
     const [formData, setFormData] = useState({
         username: '',
-        email: '',
         password: '',
-        fitnessGoals: '',
-        height: '',
-        weight: '',
-        age: '',
-        fitnessLevel: ''
     });
     const [errors, setErrors] = useState({});
     const [submissionStatus, setSubmissionStatus] = useState('');
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false); 
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -24,16 +21,51 @@ function SignUpPage() {
     const validateForm = () => {
         let formErrors = {};
         if (!formData.username) formErrors.username = "Username is required.";
-        if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) formErrors.email = "A valid email is required.";
         if (!formData.password) formErrors.password = "Password is required.";
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
     };
 
+    const handleBackendSubmission = async () => {
+        const apiBaseURL = process.env.REACT_APP_API_BASE_URL || '';
+        const endpoint = `${apiBaseURL}/auth/signup`;
+        console.log(endpoint);
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            
+            let data;
+            const contentType = response.headers.get('Content-Type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                throw new Error('Invalid response format from server.');
+            }
+
+            if (response.status === 201) {
+                setSubmissionStatus('success');
+                setIsOverlayVisible(true); 
+                setTimeout(() => {
+                    setIsOverlayVisible(false); 
+                    navigate('/login'); 
+                }, 1000); 
+            } else {
+                setSubmissionStatus(data.message || 'An error occurred. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            setSubmissionStatus('An unexpected error occurred. Please try again.');
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validateForm()) {
-            setSubmissionStatus('success');
+            handleBackendSubmission();
         } else {
             setSubmissionStatus('error');
         }
@@ -58,19 +90,6 @@ function SignUpPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                            id="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                        <div className="invalid-feedback">{errors.email}</div>
-                    </div>
-
-                    <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
@@ -83,78 +102,30 @@ function SignUpPage() {
                         <div className="invalid-feedback">{errors.password}</div>
                     </div>
 
-                    {/* Optional Fields */}
-                    <h5 className="mt-4">Additional Information</h5>
-                    <div className="form-group">
-                        <label htmlFor="fitnessGoals">Initial Fitness Goals</label>
-                        <textarea
-                            className="form-control"
-                            id="fitnessGoals"
-                            value={formData.fitnessGoals}
-                            onChange={handleChange}
-                            rows="3"
-                        ></textarea>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="height">Height (cm)</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            id="height"
-                            value={formData.height}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="weight">Weight (kg)</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            id="weight"
-                            value={formData.weight}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="age">Age</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            id="age"
-                            value={formData.age}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="fitnessLevel">Fitness Level</label>
-                        <select
-                            className="form-control"
-                            id="fitnessLevel"
-                            value={formData.fitnessLevel}
-                            onChange={handleChange}
-                        >
-                            <option value="">Select your fitness level</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                        </select>
-                    </div>
-
-                    {/* Submission Button and Feedback */}
                     <button type="submit" className="btn btn-primary btn-block mt-4">Sign Up</button>
 
                     {submissionStatus === 'success' && (
-                        <div className="alert alert-success mt-3 text-center">Registration successful!</div>
+                        <div className="alert alert-success mt-3 text-center">
+                            Registration successful! Redirecting to login...
+                        </div>
                     )}
                     {submissionStatus === 'error' && (
                         <div className="alert alert-danger mt-3 text-center">Please correct the errors in the form.</div>
                     )}
+                    {submissionStatus && submissionStatus !== 'success' && submissionStatus !== 'error' && (
+                        <div className="alert alert-danger mt-3 text-center">{submissionStatus}</div>
+                    )}
                 </form>
             </div>
+
+            {/* Overlay */}
+            {isOverlayVisible && (
+                <div className="overlay">
+                    <div className="overlay-message">
+                        Account created! Redirecting to login...
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
