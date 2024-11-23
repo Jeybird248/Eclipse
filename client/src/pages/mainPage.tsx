@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LogoutButton from '../component/LogOut';
+import './mainPage.css';
 
 const MainPage: React.FC = () => {
   return (
-    <div className="container text-center mt-5">
+    <div className="main-page">
+      <LogoutButton />
       <h1>Welcome to Your Dashboard</h1>
       <div className="mt-4">
         <Link to="/diet">

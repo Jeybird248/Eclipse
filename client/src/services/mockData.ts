@@ -72,7 +72,7 @@ export const FoodData = [
 ];
 
 
-export const dietDairyData = [
+export const dietDiaryData = [
     { user_id: 740, foodName: "Pineapple", date_eaten: "2023-12-01" },
     { user_id: 737, foodName: "Custard", date_eaten: "2024-07-25" },
     { user_id: 385, foodName: "Bran flakes", date_eaten: "2024-11-12" },

@@ -1,4 +1,4 @@
-import { dietDairyData, FoodData } from "./mockData";
+import { dietDiaryData, FoodData } from "./mockData";
 
 import axios from "axios";
 
@@ -18,7 +18,7 @@ export interface Food {
     protein:number;
 }
 
-export interface dietDairy {
+export interface dietDiary {
   user_id:number;
   foodName:string;
   date_eaten:string;
@@ -35,7 +35,7 @@ export const searchFoodData = (query: string): Promise<Food[]> => {
       .then((response) => response.data);
   };
 
-  // export const searchDietDairyData = (query: string): Promise<dietDairy[]> => {
+  // export const searchDietDiaryData = (query: string): Promise<dietDiary[]> => {
   //   return httpClient
   //     .get(`/dietDiary/${encodeURIComponent(query)}`)
   //     .then((response) => response.data)
@@ -43,11 +43,11 @@ export const searchFoodData = (query: string): Promise<Food[]> => {
   //       console.error(`Error fetching diet dairy data for ${query}:`, error);
   //       throw error;
   //     });
-  export const searchDietDairyData = async (query: string): Promise<dietDairy[]> => {
+  export const searchDietDiaryData = async (query: string): Promise<dietDiary[]> => {
     try {
       // Add quotes around the date
       const formattedQuery = `"${query}"`; // Add quotes around the query
-      const response = await httpClient.get('/dietDairy/${encodeURIComponent(formattedQuery)}');
+      const response = await httpClient.get('/dietDiary/${encodeURIComponent(formattedQuery)}');
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {

@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPool } from '../services/connection';
-import { RowDataPacket, ResultSetHeader } from 'mysql2'; // Import ResultSetHeader for query result
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 const router = express.Router();
 
@@ -18,16 +18,19 @@ router.post('/login', async (req, res) => {
 
     const pool = await getPool();
     try {
-        // Query for the user with the provided username and password
         const [rows] = await pool.query<RowDataPacket[]>(
-            'SELECT * FROM User WHERE username = ? AND password = ?',
+            'SELECT user_id, username FROM User WHERE username = ? AND password = ?',
             [username, password]
         );
 
         const users: User[] = rows as User[];
 
         if (users.length > 0) {
-            res.status(200).json({ message: 'Login successful!', username: users[0].username });
+            res.status(200).json({
+                message: 'Login successful!',
+                user_id: users[0].user_id,
+                username: users[0].username,
+            });
         } else {
             res.status(401).json({ message: 'Invalid username or password.' });
         }
@@ -36,6 +39,7 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ message: 'An error occurred during login.' });
     }
 });
+
 
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LandingPage.css';
@@ -13,6 +13,14 @@ function LoginPage() {
 
     const navigate = useNavigate();
 
+    // Check if user is already logged in
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            navigate('/main');
+        }
+    }, [navigate]);
+
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
@@ -20,8 +28,8 @@ function LoginPage() {
 
     const validateForm = () => {
         let formErrors = {};
-        if (!formData.username) formErrors.username = "User ID is required.";
-        if (!formData.password) formErrors.password = "Password is required.";
+        if (!formData.username) formErrors.username = 'User ID is required.';
+        if (!formData.password) formErrors.password = 'Password is required.';
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
     };
@@ -35,13 +43,17 @@ function LoginPage() {
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({username: formData.username, password: formData.password }),
+                    body: JSON.stringify({
+                        username: formData.username,
+                        password: formData.password,
+                    }),
                 });
                 const data = await response.json();
-    
+
                 if (response.ok) {
+                    // Save user ID to localStorage
+                    localStorage.setItem('userId', data.user_id);
                     setSubmissionStatus('success');
-                    console.log(data.message);
                     navigate('/main');
                 } else {
                     setSubmissionStatus('error');
@@ -60,13 +72,17 @@ function LoginPage() {
         <div className="signup-container d-flex justify-content-center align-items-center">
             <div className="card signup-card p-4 shadow-lg">
                 <h2 className="text-center mb-4">Log In to Your Account</h2>
-                <p className="text-center mb-4">Please enter your username and password to access your account.</p>
+                <p className="text-center mb-4">
+                    Please enter your username and password to access your account.
+                </p>
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="form-group">
                         <label htmlFor="username">User ID</label>
                         <input
                             type="text"
-                            className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+                            className={`form-control ${
+                                errors.username ? 'is-invalid' : ''
+                            }`}
                             id="username"
                             value={formData.username}
                             onChange={handleChange}
@@ -79,7 +95,9 @@ function LoginPage() {
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
-                            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                            className={`form-control ${
+                                errors.password ? 'is-invalid' : ''
+                            }`}
                             id="password"
                             value={formData.password}
                             onChange={handleChange}
@@ -88,10 +106,14 @@ function LoginPage() {
                         <div className="invalid-feedback">{errors.password}</div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-block mt-4">Log In</button>
+                    <button type="submit" className="btn btn-primary btn-block mt-4">
+                        Log In
+                    </button>
 
                     {submissionStatus === 'error' && (
-                        <div className="alert alert-danger mt-3 text-center">Please check your credentials.</div>
+                        <div className="alert alert-danger mt-3 text-center">
+                            Please check your credentials.
+                        </div>
                     )}
                 </form>
             </div>
