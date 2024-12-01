@@ -8,6 +8,7 @@ import SignUpPage from './pages/SignUpPage';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/mainPage';
+import WorkoutPlannerPage from './pages/WorkoutPlannerPage';
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/main" element={<MainPage />} />
           <Route path="/diet" element={<DietPage />} />
           <Route path="/food" element={<FoodPage />} />
+          <Route path="/workoutplanner" element={<WorkoutPlannerPage />} />
         </Route>
       </Routes>
     </Router>
