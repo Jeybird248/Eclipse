@@ -1,4 +1,4 @@
-import { dietDiaryData, FoodData } from "./mockData";
+import { dietDiaryData, FoodData, workoutData } from "./mockData";
 
 import axios from "axios";
 
@@ -24,8 +24,14 @@ export interface dietDiary {
   date_eaten:string;
 }
 
-
-
+export interface Workouts {
+  title: string;
+  description: string;
+  exerciseType: string;
+  bodyPart: string;
+  equipment: string;
+  level: string;
+}
 
 export const searchFoodData = (query: string): Promise<Food[]> => {
     return httpClient
@@ -58,3 +64,11 @@ export const searchFoodData = (query: string): Promise<Food[]> => {
       throw error;
     }
   };
+
+  // export const searchWorkoutData = async (query: string): Promise<Workouts[]> => { 
+  //   try {
+
+  //   } catch (error: any) {
+  //     console.error('Error fetching exercise data');
+  //   }
+  // };

@@ -85,3 +85,11 @@ export const dietDiaryData = [
     // { user_id: 722, foodName: "Rutabagas", date_eaten: "2024-01-20" },
     // { user_id: 109, foodName: "Peppers Raw, green, sweet", date_eaten: "2024-03-09" }
 ];
+
+export const workoutData = [
+    { title: "Partner plank band row", description: "The partner plank band row is an abdominal exercise where two partners perform single-arm planks while pulling on the opposite ends of an exercise band. This technique can be done for time or reps in any ab-focused workout.", exerciseType: "Strength", bodyPart: "Abdominals", equipment: "Bands", level: "Intermediate" },
+    { title: "Banded crunch isometric hold", description: "The banded crunch isometric hold is an exercise targeting the abdominal muscles, particularly the rectus abdominis or 'six-pack' muscles. The band adds resistance and continuous tension to this popular exercise.", exerciseType: "Strength", bodyPart: "Abdominals", equipment: "Bands", level: "Intermediate" },
+    { title: "FYR Banded Plank Jack", description: "The banded plank jack is a variation on the plank that involves moving the legs in and out for repetitions. Having a band around the thighs forces the lower body to work harder, particularly the hips and glutes. The plank jack is commonly performed as part of a bodyweight circuit, or as part of a dynamic warm-up.", exerciseType: "Strength", bodyPart: "Abdominals", equipment: "Bands", level: "Intermediate" },
+    { title: "Banded crunch", description: "The banded crunch is an exercise targeting the abdominal muscles, particularly the rectus abdominis or 'six-pack' muscles. The band adds resistance and continuous tension to this popular exercise.", exerciseType: "Strength", bodyPart: "Abdominals", equipment: "Bands", level: "Intermediate" },
+    { title: "Crunch", description: "The crunch is a popular core exercise targeting the rectus abdominis, or 'six-pack' muscles, as well as the obliques. It has been the centerpiece of many ab-focused workouts, due to both its simplicity and the intense burn and mind-muscle connection it produces. It can be performed for time or reps as part of the ab-focused portion of any workout.", exerciseType: "Strength", bodyPart: "Abdominals", equipment: "Bands", level: "Intermediate" },
+];
