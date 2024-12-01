@@ -9,7 +9,7 @@ const MainPage: React.FC = () => {
     <div className="main-page">
       <LogoutButton />
       <h1>Welcome to Your Dashboard</h1>
-      <h2>Fitness Goals</h2>
+      {/* <h2>Fitness Goals</h2>
       <ul className="card">
         <li>Lose 50 pounds by the end of the year</li>
         <li>Gain 20 pounds of muscle</li>
@@ -22,7 +22,7 @@ const MainPage: React.FC = () => {
       <ul className="card">
         <li>50% - Lose 50 pounds by the end of the year</li>
         <li>30% - Gain 20 pounds of muscle</li>
-      </ul>
+      </ul> */}
       <div className="mt-4">
         <Link to="/diet">
           <button className="btn btn-primary btn-lg m-2">Diet Diary</button>

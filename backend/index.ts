@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import foodRoutes from './src/routes/foodRoutes';
 import dietDiaryRoutes from './src/routes/dietDiaryRoutes';
 import authRoutes from './src/routes/auth';
+import workoutRoutes from './src/routes/workoutRoutes';
+import workoutInstanceRoutes from './src/routes/workoutInstanceRoutes';
 
 import cors from 'cors';
 
@@ -20,6 +22,8 @@ app.get('/api/', (req:Request, res:Response) => {
 app.use("/api/food", foodRoutes);
 app.use("/api/diet-diary", dietDiaryRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/workout', workoutRoutes)
+app.use('/api/workoutInstance', workoutInstanceRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

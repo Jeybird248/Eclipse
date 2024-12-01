@@ -27,7 +27,6 @@ export interface dietDiary {
 export interface Workouts {
   title: string;
   description: string;
-  exerciseType: string;
   bodyPart: string;
   equipment: string;
   level: string;

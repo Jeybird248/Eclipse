@@ -1,42 +1,198 @@
+
 .workout-page {
-    background: linear-gradient(135deg, #fbc7d4, #a6c1ee);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    position: relative; 
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
 }
 
-.workout-page h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+
+.left-pane,
+.right-pane {
+  width: 45%;
+  margin: 10px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.workout-page button {
-    background-color: #6a82fb;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-.workout-page button:hover {
-background-color: #74ebd5;
-transform: scale(1.05);
+.left-pane h1,
+.right-pane h1 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
 }
 
-.workout-page p {
-font-size: 1.1rem;
-color: #888;
-margin-top: 20px;
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
 }
 
-.workout-button {
-    padding: 12px 20px;
-    margin-top: 10px;
+input[type="text"]:focus {
+  border-color: #74ebd5;
+  box-shadow: 0 0 5px rgba(116, 235, 213, 0.4);
+}
+
+
+.workout-results,
+.plan-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.workout-results li,
+.plan-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+
+button {
+  background-color: #6a82fb;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #74ebd5;
+  transform: scale(1.05);
+}
+
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}
+
+
+.filter-dropdown {
+  margin-top: 20px;
+}
+
+.filter-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+
+.filter-content {
+  display: none;
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 1;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.filter-dropdown-content {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+
+.filter-group:hover .filter-content {
+  display: block;
+}
+
+
+.filter-content label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
+.workout-list,
+.right-pane ul {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0;
+  list-style-type: none;
+}
+
+.workout-list li,
+.right-pane ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.workout-list li:last-child,
+.right-pane ul li:last-child {
+  border-bottom: none;
+}
+
+.workout-list label,
+.right-pane label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.filter-list label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.workout-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.workout-details {
+  flex: 1;
+  font-size: 16px;
+}
+
+.add-button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #45a049;
 }
