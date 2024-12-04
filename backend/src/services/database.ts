@@ -3,6 +3,7 @@ import { Food } from "../models/food";
 import { dietDiary } from "../models/dietDiary";
 import { getPool } from './connection';
 import { ExerciseInstance } from "../models/workoutInstance";
+import { WorkoutPlanAndDietDiary } from "../models/workoutPlanAndDietDiary";
 
 
 export async function getAllFood(): Promise<Food[]> {
@@ -156,7 +157,6 @@ export async function getUniqueFilters(): Promise<any> {
   }
 }
 
-
 export async function addExercise(exercise: Exercise): Promise<void> {
   const pool = await getPool();
   try {
@@ -272,5 +272,39 @@ export async function fetchTodayPlan(userId: number): Promise<ExerciseInstance[]
   } catch (error) {
     console.error('Error fetching today\'s plan:', error);
     throw new Error('Failed to fetch today\'s workout plan.');
+  }
+}
+
+export async function logWorkoutPlanAndDiet(workoutPlanandDietDiary: WorkoutPlanAndDietDiary): Promise<void> {
+  const pool = await getPool();
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    await connection.query('INSERT INTO UserWorkoutPlan (planId, userId, workoutPlan, date) VALUES (?, ?, ?, ?);', [workoutPlanandDietDiary.planId, workoutPlanandDietDiary.user_id, workoutPlanandDietDiary.workoutPlan, workoutPlanandDietDiary.date_eaten]);
+    await connection.query('INSERT INTO UserDiet (user_id, foodName, date_eaten) VALUES (?, ?, ?);', [workoutPlanandDietDiary.user_id, workoutPlanandDietDiary.foodName, workoutPlanandDietDiary.date_eaten]);
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    console.error('Error logging workout plan and diet:', error);
+    throw new Error('Could not log workout plan and diet.');
+  } finally {
+    connection.release();
+  }
+}
+
+export async function deleteWorkoutPlanAndDiet(planId: number, userId: number, workoutPlan: string, foodName: string, date: string): Promise<void> {
+  const pool = await getPool();
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    await connection.query('DELETE FROM UserWorkoutPlan WHERE planId = ? AND userId = ? AND workoutPlan = ?;', [planId, userId, workoutPlan]);
+    await connection.query('DELETE FROM UserDiet WHERE user_id = ? AND foodName = ? AND date_eaten = ?;', [userId, foodName, date]);
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    console.error('Error deleting workout plan and diet:', error);
+    throw new Error('Could not delete workout plan and diet.');
+  } finally {
+    connection.release();
   }
 }
