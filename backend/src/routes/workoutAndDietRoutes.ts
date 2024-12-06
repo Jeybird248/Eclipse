@@ -17,7 +17,7 @@ router.get("/dietDiary/:userId/:date", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
     const { planId, user_id, workoutPlan, foodName, date_eaten } = req.body;
-    console.log("Adding new workout plan and diet instance:", { planId, user_id, workoutPlan, foodName, date_eaten }); 
+    console.log("Adding new workout plan and diet instance:", planId, user_id, workoutPlan, foodName, date_eaten); 
 
     try {
         await logWorkoutPlanAndDiet({ planId, user_id, workoutPlan, foodName, date_eaten });

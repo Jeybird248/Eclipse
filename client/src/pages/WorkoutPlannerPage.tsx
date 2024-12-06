@@ -348,15 +348,6 @@ const WorkoutPlannerPage: React.FC = () => {
           if (!workoutPlanExists && !dietExists) {
             addWorkoutPlanAndDiet(workoutPlan, diet);
           } else {
-          //   const workoutPlanToRemove = todayWorkoutPlan.find(
-          //     (item) => item.workoutPlan === workoutPlan
-          //   );
-          //   const dietToRemove = todayUserDiet.find(
-          //     (item) => item.foodName === diet
-          //   );
-          //   // if (workoutPlanToRemove && dietToRemove) {
-          //   //   removeWorkoutPlanAndDiet(workoutPlanToRemove.planId, workoutPlanToRemove.workoutPlan, dietToRemove.foodName);
-          //   // }
             console.log("Cannot add entry");
           } 
         }}>
