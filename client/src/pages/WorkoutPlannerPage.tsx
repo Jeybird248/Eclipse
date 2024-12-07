@@ -39,13 +39,12 @@ const WorkoutPlannerPage: React.FC = () => {
   const [todayUserDiet, setTodayDietDiary] = useState<dietDiary[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [workoutAndDietTerm, setworkoutAndDietTerm] = useState<string>("");
-  const [todayWorkoutPlan, setTodayWorkoutPlan] = useState<ExerciseInstance[]>([]);
   const navigate = useNavigate();
 
   const userId = localStorage.getItem("userId") || "";
   const numUserId = parseInt(userId);
   const todayDate = new Date().toISOString().split("T")[0];
-
+  
   useEffect(() => {
     const fetchUniqueValues = async () => {
       try {
@@ -75,7 +74,7 @@ const WorkoutPlannerPage: React.FC = () => {
         const data = await response.json();
         const diet_data = await diet_response.json();
         console.log("Fetched Today's Plan and Diet:", data, diet_data);
-        setTodayWorkoutPlan(data);
+        setTodayPlan(data);
         setTodayDietDiary(diet_data);
       } catch (error) {
         console.error("Error fetching today's plan and diet:", error);
@@ -341,10 +340,8 @@ const WorkoutPlannerPage: React.FC = () => {
           const workoutPlan = input[0];
           const diet = input[1];
 
-          const workoutPlanExists = todayWorkoutPlan.some((item) => item.workoutPlan == workoutPlan);
-          const dietExists = todayUserDiet.some((item) => item.foodName == diet);
-          console.log(workoutPlanExists);
-          console.log(dietExists);
+          const workoutPlanExists = todayPlan.some((item) => item.workoutPlan === workoutPlan);
+          const dietExists = todayUserDiet.some((item) => item.foodName === diet);
           if (!workoutPlanExists && !dietExists) {
             addWorkoutPlanAndDiet(workoutPlan, diet);
           } else {
@@ -358,14 +355,14 @@ const WorkoutPlannerPage: React.FC = () => {
             const workoutPlan = input[0];
             const diet = input[1];
   
-            const workoutPlanExists = todayWorkoutPlan.some((item) => item.workoutPlan == workoutPlan);
-            const dietExists = todayUserDiet.some((item) => item.foodName == diet);
+            const workoutPlanExists = todayPlan.some((item) => item.workoutPlan === workoutPlan);
+            const dietExists = todayUserDiet.some((item) => item.foodName === diet);
             if (workoutPlanExists && dietExists) {
-              const workoutPlanToRemove = todayWorkoutPlan.find(
-                (item) => item.workoutPlan == workoutPlan
+              const workoutPlanToRemove = todayPlan.find(
+                (item) => item.workoutPlan === workoutPlan
               );
               const dietToRemove = todayUserDiet.find(
-                (item) => item.foodName == diet
+                (item) => item.foodName === diet
               );
               if (workoutPlanToRemove && dietToRemove) {
                 removeWorkoutPlanAndDiet(workoutPlanToRemove.planId, workoutPlanToRemove.workoutPlan, dietToRemove.foodName);

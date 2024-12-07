@@ -24,9 +24,6 @@ const DietPage: React.FC = () => {
       return;
     }
 
-    console.log("UserId:", userId);
-    console.log("Selected Date:", date);
-
     try {
       const response = await fetch(`/api/diet-diary/${userId}/${date}`);
       if (!response.ok) {
@@ -60,7 +57,11 @@ const DietPage: React.FC = () => {
     <div className="diet-page">
       <LogoutButton />
       <h1>Diet Diary</h1>
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+      <input type="date" value={date} onChange={(e) => {
+        const selectedDate = e.target.value;
+        setDate(selectedDate);
+        localStorage.setItem('selected_-date', selectedDate);
+      }} />
       <button onClick={handleSubmit} disabled={!date}>Show Meals</button>
       <button onClick={handleClear}>Clear</button>
 

@@ -280,6 +280,9 @@ export async function logWorkoutPlanAndDiet(workoutPlanandDietDiary: WorkoutPlan
   try {
     await pool.query('CALL addWorkoutPlanAndDietEntry(?, ?, ?, ?, ?, ?)', 
       [workoutPlanandDietDiary.planId, workoutPlanandDietDiary.user_id, workoutPlanandDietDiary.workoutPlan, workoutPlanandDietDiary.foodName, workoutPlanandDietDiary.date_eaten, workoutPlanandDietDiary.date_eaten]);
+    await pool.query('CALL showTotalCalories(?)', [workoutPlanandDietDiary.user_id]);
+    await pool.query('CALL highestCalorieItems(?)', [workoutPlanandDietDiary.user_id]);
+    await pool.query('CALL workoutPlanAndDietCount(?)', [workoutPlanandDietDiary.user_id]);
   } catch (error) {
     console.error('Error logging workout plan and diet:', error);
     throw new Error('Could not log workout plan and diet.');
@@ -290,6 +293,9 @@ export async function deleteWorkoutPlanAndDiet(planId: number, userId: number, w
   const pool = await getPool();
   try {
     await pool.query('CALL deleteWorkoutPlanAndDietEntry(?, ?, ?, ?, ?)', [planId, userId, workoutPlan, foodName, date]);
+    await pool.query('CALL showTotalCalories(?)', [userId]);
+    await pool.query('CALL highestCalorieItems(?)', [userId]);
+    await pool.query('CALL workoutPlanAndDietCount(?)', [userId]);
   } catch (error) {
     console.error('Error deleting workout plan and diet:', error);
     throw new Error('Could not delete workout plan and diet.');
