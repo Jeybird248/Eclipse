@@ -17,6 +17,18 @@ interface ExerciseInstance {
   workoutPlan: string;
   date: string;
 }
+interface WorkoutPlanAndDietDiary {
+  planId: number;
+  user_id: number;
+  workoutPlan: string;
+  foodName: string;
+  date_eaten: string;
+}
+interface dietDiary {
+  user_id:number;
+  foodName:string;
+  date_eaten:string;
+}
 
 const WorkoutPlannerPage: React.FC = () => {
   const [filtersVisible, setFiltersVisible] = useState(false);
@@ -24,12 +36,15 @@ const WorkoutPlannerPage: React.FC = () => {
   const [uniqueValues, setUniqueValues] = useState<{ [key: string]: string[] }>({});
   const [searchResults, setSearchResults] = useState<Workouts[]>([]);
   const [todayPlan, setTodayPlan] = useState<ExerciseInstance[]>([]);
+  const [todayUserDiet, setTodayDietDiary] = useState<dietDiary[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [workoutAndDietTerm, setworkoutAndDietTerm] = useState<string>("");
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem("userId") || ""; 
+  const userId = localStorage.getItem("userId") || "";
+  const numUserId = parseInt(userId);
   const todayDate = new Date().toISOString().split("T")[0];
-
+  
   useEffect(() => {
     const fetchUniqueValues = async () => {
       try {
@@ -52,8 +67,23 @@ const WorkoutPlannerPage: React.FC = () => {
       }
     };
 
+    const fetchTodayWorkoutPlanAndDietDiary = async () => {
+      try {
+        const response = await fetch(`/api/workoutInstance/getExercise/${userId}/${todayDate}`);
+        const diet_response = await fetch(`/api/workoutAndDiet/dietDiary/${userId}/${todayDate}`);
+        const data = await response.json();
+        const diet_data = await diet_response.json();
+        console.log("Fetched Today's Plan and Diet:", data, diet_data);
+        setTodayPlan(data);
+        setTodayDietDiary(diet_data);
+      } catch (error) {
+        console.error("Error fetching today's plan and diet:", error);
+      }
+    };
+
     fetchUniqueValues();
     fetchTodayPlan();
+    fetchTodayWorkoutPlanAndDietDiary();
   }, [userId, todayDate]);
 
   useEffect(() => {
@@ -135,8 +165,71 @@ const WorkoutPlannerPage: React.FC = () => {
     }
   };
 
+  const addWorkoutPlanAndDiet = async (workoutPlan: string, foodName: string) => {
+    try {
+      const response = await fetch(`/api/workoutInstance/getMaxPlanId/${userId}`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch max planId");
+      }
+      
+      const data = await response.json();
+
+     if (Array.isArray(data) && data[0] && data[0].maxPlanId !== undefined) {
+        const newPlanId = Number(data[0].maxPlanId) + 1;
+        console.log("maxPlanId:", data[0].maxPlanId);
+        console.log("newPlanId:", newPlanId);
+        console.log("userId:", numUserId);
+  
+        const newWorkoutPlanAndDietDiary: WorkoutPlanAndDietDiary = {
+          planId: newPlanId,
+          user_id: numUserId,
+          workoutPlan, 
+          foodName,
+          date_eaten: todayDate,
+        };
+
+        console.log("Adding new workout plan and diet diary:", newWorkoutPlanAndDietDiary);
+
+        const addResponse = await fetch("/api/workoutAndDiet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newWorkoutPlanAndDietDiary),
+        });
+        const result = await addResponse.json();
+        console.log("Add to Workout Plan and Diet Result:", result);
+      } else {
+        console.error("Received invalid or empty data from the API");
+      }
+    } catch (error) {
+      console.error("Error adding workout plan and diet:", error);
+    }
+  };
+
+  const removeWorkoutPlanAndDiet = async (planId: number, workoutPlan: string, foodName: string) => {
+    try {
+      console.log("remove workout plan and diet passing in", planId, userId, workoutPlan, foodName, todayDate);
+      const response = await fetch(`/api/workoutAndDiet/getWorkoutPlan/${planId}/${userId}/${workoutPlan}/${foodName}/${todayDate}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId, userId, workoutPlan, foodName, todayDate }),
+      });
+      console.log("Successfully removed workout plan and diet")
+
+      if (!response.ok) {
+        throw new Error("Failed to remove workout plan and diet");
+      }
+    } catch (error) {
+      console.error("Error removing workout plan and diet:", error);
+    }
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleWorkoutAndDietChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setworkoutAndDietTerm(event.target.value);
   };
 
   const handleSearchClick = () => {
@@ -163,7 +256,7 @@ const WorkoutPlannerPage: React.FC = () => {
     <div className="workout-page">
       <LogoutButton />
       <div className="left-pane">
-        <h1>Search Exercises</h1>
+        <h1>Search Exercises, Workout Plan, and Diet</h1>
         <div className="search-container">
           <input
             type="text"
@@ -233,6 +326,51 @@ const WorkoutPlannerPage: React.FC = () => {
               </button>
             </div>
           ))}
+        </div>
+        <div className="search-container">
+          <input
+            type="text"
+            value={workoutAndDietTerm}
+            onChange={handleWorkoutAndDietChange}
+            placeholder="Input your workout plan and diet..."
+            aria-label="Input Workout Plan and Diet"
+          />
+          <button aria-label="Add Workout Plan and Diet Entry" onClick={() => {
+          const input = workoutAndDietTerm.split(",").map(part => part.trim().toLowerCase());
+          const workoutPlan = input[0];
+          const diet = input[1];
+
+          const workoutPlanExists = todayPlan.some((item) => item.workoutPlan === workoutPlan);
+          const dietExists = todayUserDiet.some((item) => item.foodName === diet);
+          if (!workoutPlanExists && !dietExists) {
+            addWorkoutPlanAndDiet(workoutPlan, diet);
+          } else {
+            console.log("Cannot add entry");
+          } 
+        }}>
+          Add Workout Plan and Diet Entry
+        </button>
+        <button onClick={() => {
+            const input = workoutAndDietTerm.split(",").map(part => part.trim().toLowerCase());
+            const workoutPlan = input[0];
+            const diet = input[1];
+  
+            const workoutPlanExists = todayPlan.some((item) => item.workoutPlan === workoutPlan);
+            const dietExists = todayUserDiet.some((item) => item.foodName === diet);
+            if (workoutPlanExists && dietExists) {
+              const workoutPlanToRemove = todayPlan.find(
+                (item) => item.workoutPlan === workoutPlan
+              );
+              const dietToRemove = todayUserDiet.find(
+                (item) => item.foodName === diet
+              );
+              if (workoutPlanToRemove && dietToRemove) {
+                removeWorkoutPlanAndDiet(workoutPlanToRemove.planId, workoutPlanToRemove.workoutPlan, dietToRemove.foodName);
+              }
+            }
+        }}>
+          Remove Workout Plan and Diet Entry
+        </button>
         </div>
       </div>
 

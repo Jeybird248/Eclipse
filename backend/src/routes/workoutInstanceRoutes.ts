@@ -22,7 +22,7 @@ router.get("/getExercise/:userId/:date", async (req: Request, res: Response) => 
   
   try {
     const exerciseInstance = await getExerciseInstanceByDate(Number(userId), date);
-    console.log("Fetched Exercise Instances:", exerciseInstance); 
+    console.log(" ed Exercise Instances:", exerciseInstance); 
     res.status(200).json(exerciseInstance);
   } catch (error) {
     console.error("Error in GET /:userId/:date:", error); 

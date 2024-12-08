@@ -32,6 +32,19 @@ export interface Workouts {
   level: string;
 }
 
+export interface WorkoutPlan {
+  planId: number;
+  userId: number;
+  workoutPlan: string;
+}
+export interface WorkoutPlanAndDietDiary {
+  planId: number;
+  user_id: number;
+  workoutPlan: string;
+  foodName: string;
+  date_eaten: string;
+}
+
 export const searchFoodData = (query: string): Promise<Food[]> => {
     return httpClient
       .get(`/food`, {

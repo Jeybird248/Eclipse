@@ -22,7 +22,7 @@ const FoodPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [foodData, setFoodData] = useState<Food[]>([]);
   const [dietDiary, setDietDiary] = useState<DietDiary[]>([]);
-  const date = localStorage.getItem('selected_date') || '';
+  const date = localStorage.getItem('selected_-date') || '';
   const userId = Number(localStorage.getItem('userId'));
 
   
@@ -44,6 +44,7 @@ const FoodPage: React.FC = () => {
       console.log("Calling fetchDietDiary");
       fetchDietDiary();
     } else {
+      console.log("This is date:" + date);
       console.error("UserId or Date is missing. Cannot fetch diet diary.");
     }
   }, [userId, date, fetchDietDiary]); 
